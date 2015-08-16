@@ -30,6 +30,7 @@ void CsilentDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CsilentDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -45,6 +46,9 @@ BOOL CsilentDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	_sound.keepSilent();
+	_headset.setHeadset(checkHeadset());
+	SetTimer(TIMER, 300, 0);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -85,3 +89,42 @@ HCURSOR CsilentDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CsilentDlg::OnTimer(UINT_PTR nIDEvent){
+	switch (nIDEvent)
+	{
+	case TIMER:
+		bool ishave = checkHeadset();
+		if (ishave == _headset.getHeadset())break;
+		
+		_headset.setHeadset(ishave);
+
+		//pull out the headset
+		if(!ishave){
+			_sound.keepSilent();
+			setSound();
+		}
+
+		//The headset is plugged
+		else{
+			_sound.restore();
+			setSound();
+		}
+		break;
+	default:
+		CString tmp;
+		tmp.Format("There is not anything setting timer for this %d", nIDEvent);
+		MessageBox(tmp, CString("Error"));
+		break;
+	}
+
+	CsilentDlg::OnTimer(nIDEvent);
+}
+
+
+
+void CsilentDlg::OnClose()
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	KillTimer(TIMER);
+	CDialogEx::OnClose();
+}

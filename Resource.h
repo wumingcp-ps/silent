@@ -4,6 +4,7 @@
 //
 #define IDR_MAINFRAME					128
 #define IDD_SILENT_DIALOG				102
+#define TIMER 1
 
 // 新对象的下一组默认值
 //

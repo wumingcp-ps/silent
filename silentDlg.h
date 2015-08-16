@@ -4,6 +4,10 @@
 
 #pragma once
 
+#include <cstringt.h>
+
+#include "headset.h"
+#include "sound.h"
 
 // CsilentDlg ¶Ô»°¿ò
 class CsilentDlg : public CDialogEx
@@ -28,4 +32,13 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
+protected:
+	float checkVolume();
+	bool checkHeadset();
+	void setSound();
+
+private:
+	Cheadset _headset;
+	Csound _sound;
 };
